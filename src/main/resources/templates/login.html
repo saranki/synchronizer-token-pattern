@@ -16,7 +16,7 @@
 
 <body>
 
-	<form class="login-form">
+	<form class="login-form" action="/home" method="POST">
 		<h2 class="login-text">LOGIN</h2>
 		<p class="login-text">
 			<span class="fa-stack fa-lg"> <i
@@ -24,9 +24,10 @@
 				class="fa fa-lock fa-stack-1x"></i>
 			</span>
 		</p>
-		<input type="email" class="login-username" autofocus="true"
-			required="true" placeholder="Email" /> <input type="password"
-			class="login-password" required="true" placeholder="Password" /> <input
+		<input type="text" class="login-username" name ="username" autofocus="true"
+			required="true" placeholder="Username" /> 
+		<input type="password"
+			class="login-password" required="true" name="password" placeholder="Password" /> <input
 			type="submit" name="Login" value="Login" class="login-submit" />
 	</form>
 	<div class="underlay-photo"></div>
