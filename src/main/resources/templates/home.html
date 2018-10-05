@@ -1,14 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<title>Sleek Login Form</title>
+<title>Money Transfer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+
+<link rel="stylesheet" href="css/home.css">
+
+
 </head>
+
 <body>
 
-<p>This text is normal.</p>
 
-<p><b>This text is bold.</b></p>
+	<div class="container">
+		<div class="row header">
+			<h1>Money Transfer &nbsp;</h1>
+			<h3>Transfer the money with just one click!</h3>
+		</div>
+		<div class="row body">
+			<form action="#" method="post">
+				<ul>
 
+					<li>
+						<p class="left">
+							<label for="account_holder">Account Holder</label> 
+							<small><input
+								type="text" name="account_holder"
+								placeholder="Account Holder Name" /></small>
+								<br>
+						</p>
+						
+						<p class="left">
+							<label for="account_number">Account Number</label> 
+							<small><input
+								type="text" name="account_number" 
+								placeholder="Account Number" /></small>
+								<br>
+						</p>
+					
+						<p class="left">
+							<label for="sender_account_number">Sender's Account
+								Number</label> 
+								<small><input type="text" name="sender_account_number"
+								placeholder="Sender's Account Number" /></small>
+								<br>
+						</p>
+						
+						<p class="left">
+							<label for="amount">Transfer Amount</label> 
+							<small><input type="text"
+								name="amount" placeholder="Transfer Amount" /></small>
+								<br>
+						</p>
+					</li>
+					<li><input class="btn btn-submit" type="submit" value="Submit" id = "btn-submit"/>
+						<small>or press <strong>enter</strong></small></li>
+				</ul>
+				<div>
+					<span id="error-message">Sorry, Couldn't complete the transaction</span>
+				</div>
+				
+				<div>
+					<span id="success-message">Transaction completed successfully!!!</span>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+	
+	
+	function retrieveToken() {
+        $.ajax({
+            type: "GET",
+            url: "/token",
+            contentType: "text/json",
+            success: function(data) {
+                $("#btn-submit").before('<input type="hidden" name="csrf" value="'+data+'">');
+            },
+            error: function () {
+            }
+        });
+	</script>
 </body>
+
 </html>
