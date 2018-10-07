@@ -21,23 +21,28 @@
 			<form action="#" th:action="@{/transfer}" th:object="${transfer}" method="post">
 				<ul>
 					<li>
-
+						<div>
 						<p class="left">
-							<label for="account_number">Receiver's Account Number</label> <small><input
+							<label for="account_number">Receiver's A/C Number</label> <small><input
 								type="text" th:field="*{accountNumber}" name="account_number" placeholder="Account Number" /></small>
 							<br>
 						</p>
+						</div>
 
+						<div>
 						<p class="left">
-							<label for="sender_account_number">Sender's Account Number</label> <small><input
+							<label for="sender_account_number">Sender's A/C Number</label> <small><input
 								th:field="*{senderNumber}" type="text" name="sender_account_number"
 								placeholder="Sender's Account Number" /></small> <br>
-						</p>
-
+						</p>						
+						</div>
+						
+						<div>
 						<p class="left">
 							<label for="amount">Transfer Amount</label> <small><input type="text" name="amount"
 								th:field="*{amount}" placeholder="Transfer Amount" /></small> <br>
 						</p>
+						</div>
 					</li>
 					<li><input class="btn btn-submit" type="submit" value="Submit" id="btn-submit" /> <small>or
 							press <strong>enter</strong>
@@ -48,7 +53,34 @@
 	</div>
 
 	<script type="text/javascript">
-		window.addEventListener('load', retrieveToken);
+		window.addEventListener('load', function() {
+			retrieveToken();
+			checkStatus();
+		});
+
+		function checkStatus() {
+			if (getParameterByName("status")
+					&& getParameterByName("status") === "failed") {
+				alert("Failure\nThe transaction was not completed!");
+
+			} else if (getParameterByName("status")
+					&& getParameterByName("status") === "success") {
+				alert("Success\nThe transaction was completed successfully!!!");
+
+			}
+		}
+		function getParameterByName(name, url) {
+			if (!url)
+				url = window.location.href;
+			name = name.replace(/[\[\]]/g, '\\$&');
+			var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'), results = regex
+					.exec(url);
+			if (!results)
+				return null;
+			if (!results[2])
+				return '';
+			return decodeURIComponent(results[2].replace(/\+/g, ' '));
+		}
 
 		function retrieveToken() {
 			console.log('Retrieving token...');
