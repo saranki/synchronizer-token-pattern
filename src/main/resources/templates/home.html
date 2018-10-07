@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
 <meta charset="UTF-8">
@@ -7,84 +7,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-
-
 <link rel="stylesheet" href="css/home.css">
-
-
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
-
-
 	<div class="container">
 		<div class="row header">
 			<h1>Money Transfer &nbsp;</h1>
 			<h3>Transfer the money with just one click!</h3>
 		</div>
 		<div class="row body">
-			<form action="#" method="post">
+			<form action="#" th:action="@{/transfer}" th:object="${transfer}" method="post">
 				<ul>
-
 					<li>
+
 						<p class="left">
-							<label for="account_holder">Account Holder</label> 
-							<small><input
-								type="text" name="account_holder"
-								placeholder="Account Holder Name" /></small>
-								<br>
+							<label for="account_number">Receiver's Account Number</label> <small><input
+								type="text" th:field="*{accountNumber}" name="account_number" placeholder="Account Number" /></small>
+							<br>
 						</p>
-						
+
 						<p class="left">
-							<label for="account_number">Account Number</label> 
-							<small><input
-								type="text" name="account_number" 
-								placeholder="Account Number" /></small>
-								<br>
+							<label for="sender_account_number">Sender's Account Number</label> <small><input
+								th:field="*{senderNumber}" type="text" name="sender_account_number"
+								placeholder="Sender's Account Number" /></small> <br>
 						</p>
-					
+
 						<p class="left">
-							<label for="sender_account_number">Sender's Account
-								Number</label> 
-								<small><input type="text" name="sender_account_number"
-								placeholder="Sender's Account Number" /></small>
-								<br>
-						</p>
-						
-						<p class="left">
-							<label for="amount">Transfer Amount</label> 
-							<small><input type="text"
-								name="amount" placeholder="Transfer Amount" /></small>
-								<br>
+							<label for="amount">Transfer Amount</label> <small><input type="text" name="amount"
+								th:field="*{amount}" placeholder="Transfer Amount" /></small> <br>
 						</p>
 					</li>
-					<li><input class="btn btn-submit" type="submit" value="Submit" id = "btn-submit"/>
-						<small>or press <strong>enter</strong></small></li>
+					<li><input class="btn btn-submit" type="submit" value="Submit" id="btn-submit" /> <small>or
+							press <strong>enter</strong>
+					</small></li>
 				</ul>
-				<div>
-					<span id="error-message">Sorry, Couldn't complete the transaction</span>
-				</div>
-				
-				<div>
-					<span id="success-message">Transaction completed successfully!!!</span>
-				</div>
 			</form>
 		</div>
 	</div>
-	<script>
-	
-	
-	function retrieveToken() {
-        $.ajax({
-            type: "GET",
-            url: "/token",
-            contentType: "text/json",
-            success: function(data) {
-                $("#btn-submit").before('<input type="hidden" name="csrf" value="'+data+'">');
-            },
-            error: function () {
-            }
-        });
+
+	<script type="text/javascript">
+		window.addEventListener('load', retrieveToken);
+
+		function retrieveToken() {
+			console.log('Retrieving token...');
+			$
+					.ajax({
+						type : "GET",
+						url : "/token",
+						contentType : "text/json",
+						success : function(data) {
+							console.log("retrieved token.. ", data);
+							$("#btn-submit")
+									.before(
+											'<input type="hidden" name="csrf" value="' + data + '">');
+						},
+						error : function() {
+							console.log("Error in loading token...");
+						}
+					});
+		}
 	</script>
 </body>
 

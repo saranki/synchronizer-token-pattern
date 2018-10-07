@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public interface AuthenticationService {
 	
-	public boolean isUserAuthenticated(String username, String password) throws NoSuchAlgorithmException;
+	public boolean isValidUser(String username, String password) throws NoSuchAlgorithmException;
 	public String generateCSRFToken(String sessionId);
 
 }

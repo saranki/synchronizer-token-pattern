@@ -9,8 +9,6 @@ package com.sliit.synchronizertokenpattern.model;
  */
 public class Transfer {
 	
-	private String accountHolderName;
-	
 	private String accountNumber;
 	
 	private String senderNumber;
@@ -19,13 +17,6 @@ public class Transfer {
 	
 	private String csrf;
 
-	public String getAccountHolderName() {
-		return accountHolderName;
-	}
-
-	public void setAccountHolderName(String accountHolderName) {
-		this.accountHolderName = accountHolderName;
-	}
 
 	public String getAccountNumber() {
 		return accountNumber;

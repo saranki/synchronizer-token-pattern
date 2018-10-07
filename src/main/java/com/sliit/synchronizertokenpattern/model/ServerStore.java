@@ -2,48 +2,41 @@ package com.sliit.synchronizertokenpattern.model;
 
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Saranki
  *
  */
 public class ServerStore {
 
-	public HashMap<String, String> sessions;
+	public static HashMap<String, String> sessionStore = new HashMap<>();
+	public static HashMap<String, User> userStore = new HashMap<>();
 
-	public static volatile ServerStore serverStore;
+	private static Logger logger = LoggerFactory.getLogger(ServerStore.class);
 
-	/**
-	 * 
-	 */
-	private ServerStore() {
-		sessions = new HashMap<>();
+	public void assignUserCredentials() {
+		User user = new User();
+		user.setUsername("master");
+		user.setPassword("240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9");
+		userStore.put(user.getUsername(), user);
+		logger.info("Initial user credentials assigned...");
 	}
 
-	public static ServerStore getUserSessionDetails() {
-		if (serverStore == null) {
-			synchronized (ServerStore.class) {
-				if (serverStore == null) {
-					serverStore = new ServerStore();
-				}
-			}
+	public void storeUsersAndTokens(User user) {
+		userStore.put(user.getUsername(), user);
+		if (user.getToken() != null) {
+			sessionStore.put(user.getSessionId(), user.getToken());
 		}
-
-		return serverStore;
 	}
 
-	public void storeCSRFToken(String session, String token) {
-		if (sessions.get(session) != null) {
-			// If token has been expired change the token for the session id
-			sessions.replace(session, token);
-		} else {
-			sessions.put(session, token);
-		}
-
+	public User findCredentials(String username) {
+		return userStore.get(username);
 	}
-	
-	public String retrieveCSRFToken(String sessionId){
-		return sessions.get(sessionId);
-		
+
+	public String retrieveCSRFToken(String sessionId) {
+		return sessionStore.get(sessionId);
 	}
 
 }

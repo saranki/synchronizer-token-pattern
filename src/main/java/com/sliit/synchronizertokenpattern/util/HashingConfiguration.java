@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties
-public class EncryptionConfiguration {
+public class HashingConfiguration {
 	
     public String convertToHash(String seed) throws NoSuchAlgorithmException {
         MessageDigest mDigest = MessageDigest.getInstance("SHA-256");
@@ -22,8 +22,5 @@ public class EncryptionConfiguration {
         return sBuffer.toString();
     }
     
-    // generate session ID
-    public String generateSessionId(){
-    	return UUID.randomUUID().toString();
-    }
+    
 }
