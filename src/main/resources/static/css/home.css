@@ -10,6 +10,7 @@ div, textarea, input {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  background-size: cover;
 }
 
 .container {
@@ -22,7 +23,7 @@ div, textarea, input {
 }
 
 .row {
-  width: 100%;
+  /*width: 100%;*/
   margin: 0 0 1em 0;
   padding: 0 2.5em;
 }
@@ -31,6 +32,7 @@ div, textarea, input {
   border-bottom: 1px solid #ccc;
   background: url(https://images2.imgbox.com/a5/2e/m3lRbCCA_o.jpg) left -80px;
   color: #fff;
+  background-size: cover;
 }
 .row.body {
   padding: .5em 2.5em 1em;

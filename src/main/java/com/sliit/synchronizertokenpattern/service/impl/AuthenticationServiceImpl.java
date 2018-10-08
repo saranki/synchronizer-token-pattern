@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sliit.synchronizertokenpattern.controller.LoginController;
 import com.sliit.synchronizertokenpattern.model.ServerStore;
 import com.sliit.synchronizertokenpattern.model.User;
 import com.sliit.synchronizertokenpattern.service.AuthenticationService;
@@ -25,14 +24,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Autowired
 	HashingConfiguration hashingConfiguration;
+	
+	ServerStore serverStore = new ServerStore();
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
-	ServerStore serverStore = new ServerStore();
 
-	/*
-	 * Validate user if he is already registered with the system through
-	 * username and password
+	/**
+	 * Check if the credentials entered by the user in the Login form
+	 * are same as the user credentials stored in the HashMap.
+	 * Compares the username and the hash value of the typed in
+	 * password.
 	 * 
+	 * @param username
+	 * @param password
+	 * @return
 	 */
 	@Override
 	public boolean isValidUser(String username, String password) throws NoSuchAlgorithmException {
@@ -42,9 +47,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	}
 
-	/*
-	 * Authenticate user with session ID and username
+	/**
+	 * Check if the user is already authenticated using the cookies that came along with the request.
+	 * If so then extract the session Id and the username from the cookies.
+	 * 
+	 * @param cookies
+	 * @return 
 	 */
+	@Override
 	public boolean isUserAuthenticated(Cookie[] cookies) {
 		String username = "";
 		String sessionID = "";
@@ -58,31 +68,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 				}
 			}
 		}
-
 		return isUserSessionValid(username, sessionID);
 	}
 
-	/*
-	 * Validate whether the current session id and the already stored session Id
-	 * are the same
+	/**
+	 * Check if the current session Id which was extracted from the cookie 
+	 * and the already stored session Id in the HashMap are the same.
+	 * 
+	 * @param username, sessionId
+	 * @return
 	 */
+	@Override
 	public boolean isUserSessionValid(String username, String sessionId) {
 		logger.debug("Checking if user session is valid... " + username + ", " + sessionId);
 		if (serverStore.findCredentials(username) != null) {
-			// logger.debug("serverStore.findCredentials(username) -> " +
-			// serverStore.findCredentials(username));
 			return sessionId.equals(serverStore.findCredentials(username).getSessionId());
 		}
 		return false;
 	}
 
-	// generate session ID
+	/**
+	 * Generate a random value for session Id
+	 * 
+	 * @return
+	 * 
+	 * **/
+	@Override
 	public String generateSessionId() {
 		return UUID.randomUUID().toString();
 	}
 
-	/*
-	 * Generate CSRF token and store it in the server side.
+	/**
+	 * Generate CSRF token for the session using session Id
+	 * 
+	 * @param sessionId
+	 * @return
 	 * 
 	 */
 	@Override
@@ -90,6 +110,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return sessionId + System.currentTimeMillis();
 	}
 
+	/**
+	 * Store the session Id and the CSRF token in the server side HashMap for the particular user
+	 * 
+	 * @param username
+	 * @return
+	 * */
+	@Override
 	public String generateCredentialsToUser(String username) {
 		User user = serverStore.findCredentials(username);
 		String sessionId = generateSessionId();
@@ -102,17 +129,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return sessionId;
 	}
 
-	/*
-	 * Get the sessionId from the cookie
+	/**
+	 * Get the sessionId from the cookie that comes along with a request
+	 * 
+	 * @param cookies
+	 * @return
 	 * 
 	 */
+	@Override
 	public String getSessionIdFromCookie(Cookie[] cookies) {
 		if (cookies != null && cookies.length > 0) {
 			for (Cookie cookie : cookies) {
-				// if
-				// (cookie.getName().equals(credentialConfiguration.getAuthUser())){
 				if (cookie.getName().equals("sessionID")) {
-					// logger.info("cookie value: " + cookie.getValue());
 					return cookie.getValue();
 				}
 			}
@@ -120,9 +148,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		return null;
 	}
 
+	/**
+	 * Check if the CSRF token is valid for the session id stored in the server side
+	 * 
+	 * @param cookies
+	 * @return
+	 * 
+	 */
+	@Override
 	public boolean isCSRFTokenValid(String sessionId, String csrfToken) {
-		logger.debug("XXX -> " + sessionId + ", " + csrfToken);
-
 		if (csrfToken != null) {
 			logger.debug("is equal ? " + csrfToken.equals(serverStore.retrieveCSRFToken(sessionId)));
 			return csrfToken.equals(serverStore.retrieveCSRFToken(sessionId));
